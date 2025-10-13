@@ -1,369 +1,287 @@
-// === PONDASI 7: LOADER + SEO AUTO META ===
+/* main.js — MOVILA Video Engine (Integrated, v1.2) */
 
-// Loader animasi
-window.addEventListener("load", () => {
-  const loader = document.getElementById("loader");
-  if (loader) {
-    setTimeout(() => loader.classList.add("hidden"), 800);
-  }
-});
+const BASE = ""; // if hosted under movila-video/ folder, keep empty
+const VIDEO_JSON = "videos.json";
 
-// SEO otomatis di halaman video
-if (window.location.pathname.includes("video.html")) {
-  const params = new URLSearchParams(window.location.search);
-  const id = parseInt(params.get("id"));
-  const video = allVideos.find(v => v.id === id);
-
-  if (video) {
-    document.title = `${video.title} | MOVILA Shorts`;
-    document
-      .querySelector('meta[name="description"]')
-      ?.setAttribute("content", video.desc || "Watch trending short videos on MOVILA");
-    document
-      .querySelector('meta[property="og:image"]')
-      ?.setAttribute("content", `https://img.youtube.com/vi/${id}/maxresdefault.jpg`);
-  }
-}
-
-// === PONDASI 8: KATEGORI + INFINITE SCROLL + DAILY SHORT ===
-
-let loadedCount = 0;
-const perLoad = 12;
-
-// Fungsi load video bertahap
-function loadMoreVideos() {
-  const nextBatch = allVideos.slice(loadedCount, loadedCount + perLoad);
-  nextBatch.forEach(v => {
-    const rank = getTrendingRank(v.id);
-    const badge = rank ? `<div class="trending-badge">🔥 #${rank}</div>` : "";
-
-    const card = document.createElement("a");
-    card.href = `video.html?id=${v.id}`;
-    card.className = "video-card";
-    card.innerHTML = `
-      <div class="video-wrapper">
-        <video src="${v.url}" muted preload="metadata"></video>
-        ${badge}
-      </div>
-      <h3>${v.title}</h3>
-      <p>${v.desc}</p>
-    `;
-    list.appendChild(card);
-  });
-  loadedCount += perLoad;
-}
-
-// Infinite scroll listener
-window.addEventListener("scroll", () => {
-  if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 200) {
-    loadMoreVideos();
-  }
-});
-
-// Filter by category
-function filterCategory(cat) {
-  const filtered = allVideos.filter(v => v.category === cat);
-  list.innerHTML = "";
-  loadedCount = 0;
-  filtered.forEach(v => {
-    const card = document.createElement("a");
-    card.href = `video.html?id=${v.id}`;
-    card.className = "video-card";
-    card.innerHTML = `
-      <div class="video-wrapper">
-        <video src="${v.url}" muted preload="metadata"></video>
-      </div>
-      <h3>${v.title}</h3>
-      <p>${v.desc}</p>
-    `;
-    list.appendChild(card);
-  });
-}
-
-// === RANDOM DAILY SHORT ===
-if (window.location.pathname.endsWith("index.html") || window.location.pathname === "/") {
-  const today = new Date().toDateString();
-  const stored = localStorage.getItem("movila_daily_date");
-
-  if (stored !== today) {
-    const random = Math.floor(Math.random() * allVideos.length);
-    localStorage.setItem("movila_daily_index", random);
-    localStorage.setItem("movila_daily_date", today);
-  }
-
-  const dailyIndex = localStorage.getItem("movila_daily_index");
-  if (dailyIndex) {
-    const dailyVideo = allVideos[dailyIndex];
-    const section = document.createElement("section");
-    section.className = "daily-short";
-    section.innerHTML = `
-      <h2>🎥 Today’s Short</h2>
-      <video src="${dailyVideo.url}" autoplay muted loop></video>
-      <h3>${dailyVideo.title}</h3>
-      <p>${dailyVideo.desc}</p>
-    `;
-    document.querySelector("main").prepend(section);
-  }
-}
-
-// === PONDASI 9: THEME SWITCHER ===
-const themeBtn = document.getElementById("themeToggle");
-if (themeBtn) {
-  // Cek tema terakhir dari localStorage
-  const savedTheme = localStorage.getItem("movila_theme");
-  if (savedTheme === "light") {
-    document.body.classList.add("light-theme");
-    themeBtn.textContent = "☀️";
-  }
-
-  themeBtn.addEventListener("click", () => {
-    document.body.classList.toggle("light-theme");
-    const isLight = document.body.classList.contains("light-theme");
-    themeBtn.textContent = isLight ? "☀️" : "🌙";
-    localStorage.setItem("movila_theme", isLight ? "light" : "dark");
-  });
-}
-
-// PONDASI 1: Auto-load video dari JSON ke homepage
-fetch("videos.json")
-  .then(res => res.json())
-  .then(videos => {
-    const list = document.getElementById("video-list");
-    videos.forEach(v => {
-      const card = document.createElement("a");
-      card.href = `video.html?id=${v.id}`;
-      card.className = "video-card";
-      card.innerHTML = `
-        <video src="${v.url}" muted preload="metadata"></video>
-        <h3>${v.title}</h3>
-        <p>${v.desc}</p>
-      `;
-      list.appendChild(card);
-    });
-  });
-
-// === PONDASI 4 (REVISI): AUTO SEARCH + AUTO CATEGORIES ===
 let allVideos = [];
-let list = document.getElementById("video-list");
+const perLoad = 12;
+let loadedCount = 0;
+
+const list = document.getElementById("video-list");
 const searchInput = document.getElementById("search");
 const categorySelect = document.getElementById("category");
+const yearEl = document.getElementById("year");
 
-// Auto detect category dari judul atau url
-function detectCategory(title, url) {
-  const text = (title + url).toLowerCase();
-  if (text.includes("cat") || text.includes("funny")) return "funny";
-  if (text.includes("car") || text.includes("drift") || text.includes("race")) return "cars";
-  if (text.includes("dance") || text.includes("music")) return "music";
-  if (text.includes("viral")) return "viral";
+if (yearEl) yearEl.textContent = new Date().getFullYear();
+const year2 = document.getElementById("year2");
+if (year2) year2.textContent = new Date().getFullYear();
+
+/* Loader hide */
+window.addEventListener("load", () => {
+  const loader = document.getElementById("loader");
+  if (loader) setTimeout(()=> loader.classList.add("hidden"), 700);
+});
+
+/* utility: detect category from title/url */
+function detectCategory(title = "", url = "") {
+  const text = (title + " " + url).toLowerCase();
+  if (text.match(/\b(cat|kitten|pet|pets|animal|cute)\b/)) return "animals";
+  if (text.match(/\b(car|drift|race|motorsport|drive)\b/)) return "cars";
+  if (text.match(/\b(dance|music|song|beat|dj)\b/)) return "music";
+  if (text.match(/\b(funny|comedy|lol|fail|fails)\b/)) return "funny";
+  if (text.match(/\b(sport|skate|parkour|basket|football|soccer)\b/)) return "sports";
+  if (text.match(/\b(viral|trend|trending|short)\b/)) return "viral";
   return "other";
 }
 
-function displayVideos(videos) {
+/* trending rank util (top 10) */
+function getTrendingRank(id) {
+  if (!allVideos.length) return null;
+  const ranked = allVideos.map(v => {
+    const views = parseInt(localStorage.getItem(`video_views_${v.id}`) || "0", 10);
+    return {...v, views};
+  }).sort((a,b) => b.views - a.views).slice(0, 10);
+  const idx = ranked.findIndex(r => r.id === id);
+  return idx >= 0 ? idx+1 : null;
+}
+
+/* Render with polish: skeleton, hover preview, prefetch */
+async function renderWithPolish(videosToShow) {
+  if (!list) return;
+  // skeleton
+  list.innerHTML = Array.from({length:6}).map(()=>`
+    <div class="video-card skeleton-card">
+      <div class="skeleton"></div>
+      <div style="padding:12px;">
+        <div style="height:14px;width:60%;background:rgba(255,255,255,0.03);border-radius:6px;margin-bottom:8px;"></div>
+        <div style="height:10px;width:40%;background:rgba(255,255,255,0.02);border-radius:6px;"></div>
+      </div>
+    </div>
+  `).join("");
+  await new Promise(r=>setTimeout(r,80));
+
   list.innerHTML = "";
-  videos.forEach(v => {
+  videosToShow.forEach((v, i) => {
     const card = document.createElement("a");
-    card.href = `video.html?id=${v.id}`;
-    card.className = "video-card";
-    card.innerHTML = `
-      <video src="${v.url}" muted preload="metadata"></video>
-      <h3>${v.title}</h3>
-      <p>${v.desc}</p>
-    `;
+    card.className = "video-card fade-in";
+    card.href = `video.html?vid=${v.id}`;
+
+    // wrapper
+    const wrapper = document.createElement("div");
+    wrapper.style.position = "relative";
+
+    // thumbnail video element
+    const thumb = document.createElement("video");
+    thumb.src = v.url;
+    thumb.muted = true;
+    thumb.playsInline = true;
+    thumb.preload = "metadata";
+    thumb.className = "preview-solo";
+    thumb.setAttribute("aria-hidden","true");
+
+    // ensure frame ready and paused
+    thumb.addEventListener("loadeddata", () => {
+      try { thumb.currentTime = 0.5; } catch(e){}
+      thumb.pause();
+    });
+    thumb.addEventListener("error", ()=> thumb.style.background = "#111");
+
+    // overlay + badge
+    const overlay = document.createElement("div");
+    overlay.className = "switch-overlay";
+    overlay.textContent = "Loading...";
+
+    const rank = getTrendingRank(v.id);
+    if (rank) {
+      const badge = document.createElement("div");
+      badge.className = "trending-badge";
+      badge.innerText = `🔥 #${rank}`;
+      wrapper.appendChild(badge);
+    }
+
+    wrapper.appendChild(thumb);
+    wrapper.appendChild(overlay);
+
+    const info = document.createElement("div");
+    info.className = "video-info";
+    info.innerHTML = `<h3>${v.title}</h3><p>${(v.desc||"").slice(0,80)}</p>`;
+
+    card.appendChild(wrapper);
+    card.appendChild(info);
+
+    // hover preview
+    let hoverTimer = null;
+    card.addEventListener("mouseenter", ()=> {
+      hoverTimer = setTimeout(()=> { try{ thumb.play(); }catch(e){} }, 220);
+    });
+    card.addEventListener("mouseleave", ()=> {
+      clearTimeout(hoverTimer);
+      try{ thumb.pause(); thumb.currentTime = 0.5; }catch(e){}
+    });
+
+    // prefetch on mousedown/click
+    card.addEventListener("mousedown", ()=> {
+      const pre = document.createElement("link");
+      pre.rel = "prefetch"; pre.href = v.url; pre.as = "video";
+      document.head.appendChild(pre);
+      setTimeout(()=> pre.remove(), 60000);
+      overlay.classList.add("show");
+    });
+
     list.appendChild(card);
   });
 }
 
-fetch("videos.json")
-  .then(res => res.json())
-  .then(videos => {
-    // Tambahkan kategori otomatis untuk setiap video
+/* initial load: fetch videos.json */
+async function init() {
+  try {
+    const res = await fetch(VIDEO_JSON);
+    const videos = await res.json();
+
+    // normalize add category if missing
     allVideos = videos.map(v => ({
       ...v,
-      category: detectCategory(v.title, v.url)
+      category: v.category || detectCategory(v.title, v.url)
     }));
 
-    // Buat daftar kategori unik
-    const categories = [...new Set(allVideos.map(v => v.category))];
-    categories.unshift("all"); // tambah opsi "All" di awal
-
-    // Buat dropdown kategori otomatis
-    categorySelect.innerHTML = categories
-      .map(cat => `<option value="${cat}">${cat.charAt(0).toUpperCase() + cat.slice(1)}</option>`)
-      .join("");
-
-    // Tampilkan semua video pertama kali
-    displayVideos(allVideos);
-  });
-
-// Search event
-searchInput?.addEventListener("input", e => {
-  const keyword = e.target.value.toLowerCase();
-  const filtered = allVideos.filter(v =>
-    v.title.toLowerCase().includes(keyword) ||
-    v.desc.toLowerCase().includes(keyword)
-  );
-  displayVideos(filtered);
-});
-
-// Category event
-categorySelect?.addEventListener("change", e => {
-  const category = e.target.value;
-  const filtered = category === "all"
-    ? allVideos
-    : allVideos.filter(v => v.category === category);
-  displayVideos(filtered);
-});
-
-// === PONDASI 5: TRENDING SHORT SYSTEM ===
-
-// Simpan view count ke localStorage saat video dibuka
-if (window.location.pathname.includes("video.html")) {
-  const params = new URLSearchParams(window.location.search);
-  const id = parseInt(params.get("id"));
-  const key = `video_views_${id}`;
-  let views = localStorage.getItem(key) || 0;
-  localStorage.setItem(key, parseInt(views) + 1);
-}
-
-// Tombol untuk tampilkan Trending Short
-if (window.location.pathname.endsWith("index.html") || window.location.pathname === "/") {
-  const trendingBtn = document.createElement("button");
-  trendingBtn.textContent = "🔥 Trending Short";
-  trendingBtn.className = "trending-btn";
-  document.querySelector("header").appendChild(trendingBtn);
-
-  trendingBtn.addEventListener("click", () => {
-    const trendingList = allVideos
-      .map(v => {
-        const views = localStorage.getItem(`video_views_${v.id}`) || 0;
-        return { ...v, views: parseInt(views) };
-      })
-      .sort((a, b) => b.views - a.views)
-      .slice(0, 10); // ambil 10 video teratas
-
-    displayVideos(trendingList);
-  });
-}
-
-// === PONDASI 6: BADGE TRENDING + SMOOTH LOADING ===
-
-// === Trending Badge ===
-function getTrendingRank(id) {
-  const ranked = allVideos
-    .map(v => {
-      const views = localStorage.getItem(`video_views_${v.id}`) || 0;
-      return { ...v, views: parseInt(views) };
-    })
-    .sort((a, b) => b.views - a.views)
-    .slice(0, 10); // top 10
-
-  const rank = ranked.findIndex(v => v.id === id);
-  return rank >= 0 ? rank + 1 : null;
-}
-
-// Modifikasi fungsi displayVideos agar ada badge
-function displayVideos(videos) {
-  list.innerHTML = "";
-  videos.forEach(v => {
-    const rank = getTrendingRank(v.id);
-    const badge = rank ? `<div class="trending-badge">🔥 #${rank}</div>` : "";
-
-    const card = document.createElement("a");
-    card.href = `video.html?id=${v.id}`;
-    card.className = "video-card";
-    card.innerHTML = `
-      <div class="video-wrapper">
-        <video src="${v.url}" muted preload="metadata"></video>
-        ${badge}
-      </div>
-      <h3>${v.title}</h3>
-      <p>${v.desc}</p>
-    `;
-    list.appendChild(card);
-  });
-}
-
-// === Smooth Transition saat pindah halaman ===
-document.querySelectorAll("a").forEach(link => {
-  link.addEventListener("click", e => {
-    const href = link.getAttribute("href");
-    if (href && href.endsWith(".html")) {
-      e.preventDefault();
-      document.body.classList.add("fade-out");
-      setTimeout(() => (window.location.href = href), 300);
+    // build categories dropdown (unique)
+    const categories = ["all", ...Array.from(new Set(allVideos.map(v=>v.category)))];
+    if (categorySelect) {
+      categorySelect.innerHTML = categories.map(c => `<option value="${c}">${c.charAt(0).toUpperCase()+c.slice(1)}</option>`).join("");
     }
-  });
-});
 
-window.addEventListener("pageshow", () => {
-  document.body.classList.remove("fade-out");
-});
+    // shuffle initially for dynamic feed, then load first batch
+    allVideos = allVideos.sort(()=>0.5 - Math.random());
+    loadedCount = 0;
+    loadMoreVideos();
 
-// PONDASI 2: Halaman video individual
-if (window.location.pathname.includes("video.html")) {
-  const params = new URLSearchParams(window.location.search);
-  const id = parseInt(params.get("id"));
+    // daily short
+    injectDailyShort();
 
-  fetch("videos.json")
-    .then(res => res.json())
-    .then(videos => {
-      const video = videos.find(v => v.id === id);
-      const main = document.getElementById("main-video");
+    // trending button
+    addTrendingButton();
 
-      if (video) {
-        main.innerHTML = `
-          <video src="${video.url}" controls autoplay></video>
-          <h2>${video.title}</h2>
-          <p>${video.desc}</p>
-        `;
-      }
-
-// PONDASI 3: Autoplay next video + smooth transition
-const player = main.querySelector("video");
-
-if (player) {
-  player.addEventListener("ended", () => {
-    // Cari semua video kecuali yang sekarang
-    const nextList = videos.filter(v => v.id !== id);
-    const next = nextList[Math.floor(Math.random() * nextList.length)];
-
-    // Efek transisi halus
-    main.style.opacity = 0;
-    setTimeout(() => {
-      // Ganti konten video utama
-      main.innerHTML = `
-        <video src="${next.url}" controls autoplay></video>
-        <h2>${next.title}</h2>
-        <p>${next.desc}</p>
-      `;
-      history.replaceState(null, "", `video.html?id=${next.id}`);
-
-      // Fade in
-      setTimeout(() => (main.style.opacity = 1), 200);
-
-      // Scroll ke atas biar fokus ke video baru
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }, 300);
-  });
-}
-
-    // Generate 3 rekomendasi acak
-      const recommended = document.getElementById("recommended");
-      const others = videos.filter(v => v.id !== id);
-      const random = others.sort(() => 0.5 - Math.random()).slice(0, 3);
-
-      random.forEach(v => {
-        const card = document.createElement("a");
-        card.href = `video.html?id=${v.id}`;
-        card.className = "video-card";
-        card.innerHTML = `
-          <video src="${v.url}" muted preload="metadata"></video>
-          <h3>${v.title}</h3>
-          <p>${v.desc}</p>
-        `;
-        recommended.appendChild(card);
+    // wire search & category events
+    if (searchInput) {
+      searchInput.addEventListener("input", e => {
+        const q = e.target.value.toLowerCase();
+        const filtered = allVideos.filter(v => v.title.toLowerCase().includes(q) || (v.desc||"").toLowerCase().includes(q));
+        // reset loadedCount and render filtered
+        loadedCount = filtered.length; // so loadMore won't append more mistakenly
+        renderWithPolish(filtered);
       });
+    }
+
+    categorySelect?.addEventListener("change",(e) => {
+      const cat = e.target.value;
+      const filtered = cat === "all" ? allVideos : allVideos.filter(v => v.category === cat);
+      loadedCount = filtered.length;
+      renderWithPolish(filtered);
     });
+
+    // infinite scroll
+    window.addEventListener("scroll", () => {
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 220) {
+        loadMoreVideos();
+      }
+    });
+
+    // keyboard play/pause
+    window.addEventListener("keydown", (ev)=> {
+      if (ev.code === "Space" && document.activeElement.tagName !== "INPUT") {
+        const player = document.querySelector("#main-video");
+        if (player) { ev.preventDefault(); player.paused ? player.play() : player.pause(); }
+      }
+    });
+
+    // theme toggle wiring (might exist twice on pages)
+    wireThemeToggle();
+
+  } catch (err) {
+    console.error("Failed to load videos.json", err);
+    if (list) list.innerHTML = `<p style="padding:20px;color:var(--muted)">Failed to load videos. Check videos.json path & CORS.</p>`;
+  }
 }
 
+/* load more (infinite scroll) */
+function loadMoreVideos() {
+  if (!allVideos || !list) return;
+  const next = allVideos.slice(loadedCount, loadedCount + perLoad);
+  if (!next.length) return;
+  // append using renderWithPolish for just the new items
+  // for simplicity: accumulate a visible array
+  const visible = Array.from(list.querySelectorAll(".video-card")).map(n => {
+    const title = n.querySelector("h3")?.innerText || "";
+    return allVideos.find(v => v.title === title);
+  }).filter(Boolean);
+  const combined = visible.concat(next);
+  loadedCount += perLoad;
+  renderWithPolish(combined);
+}
 
+/* trending button */
+function addTrendingButton() {
+  const header = document.querySelector(".header-inner");
+  if (!header) return;
+  // avoid duplicate
+  if (document.querySelector(".trending-btn")) return;
+  const btn = document.createElement("button");
+  btn.className = "trending-btn";
+  btn.textContent = "🔥 Trending Short";
+  btn.style.marginLeft = "12px";
+  btn.addEventListener("click", ()=> {
+    const ranked = allVideos.map(v => ({...v, views: parseInt(localStorage.getItem(`video_views_${v.id}`) || "0",10)}))
+      .sort((a,b)=>b.views - a.views).slice(0, 10);
+    renderWithPolish(ranked);
+  });
+  header.appendChild(btn);
+}
+
+/* daily short injection */
+function injectDailyShort() {
+  try {
+    const today = new Date().toDateString();
+    const stored = localStorage.getItem("movila_daily_date");
+    if (stored !== today) {
+      const randomIdx = Math.floor(Math.random() * allVideos.length);
+      localStorage.setItem("movila_daily_index", randomIdx);
+      localStorage.setItem("movila_daily_date", today);
+    }
+    const idx = parseInt(localStorage.getItem("movila_daily_index") || "0",10);
+    const daily = allVideos[idx] || allVideos[0];
+    if (!daily) return;
+    const section = document.createElement("section");
+    section.className = "daily-short fade-in";
+    section.innerHTML = `
+      <h2>🎥 Today's Short</h2>
+      <video src="${daily.url}" autoplay muted loop playsinline></video>
+      <h3>${daily.title}</h3>
+      <p>${daily.desc}</p>
+    `;
+    const main = document.querySelector("main #main-content");
+    if (main) main.prepend(section);
+  } catch(e) { console.warn(e); }
+}
+
+/* Theme toggle wiring */
+function wireThemeToggle() {
+  const btns = document.querySelectorAll("#themeToggle");
+  btns.forEach(btn => {
+    const saved = localStorage.getItem("movila_theme");
+    if (saved === "light") {
+      document.body.classList.add("light-theme");
+      btn.textContent = "☀️";
+    } else {
+      btn.textContent = "🌙";
+    }
+    btn.addEventListener("click", ()=> {
+      document.body.classList.toggle("light-theme");
+      const isLight = document.body.classList.contains("light-theme");
+      btn.textContent = isLight ? "☀️" : "🌙";
+      localStorage.setItem("movila_theme", isLight ? "light" : "dark");
+    });
+  });
+}
+
+/* init */
+init();
