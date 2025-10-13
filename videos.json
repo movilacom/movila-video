@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "title": "Funny Cat Compilation",
+    "desc": "Kumpulan momen lucu kucing yang bikin ngakak!",
+    "url": "https://cdn.mysite.com/videos/cat1.mp4",
+    "category": "funny"
+  },
+  {
+    "id": 2,
+    "title": "Epic Car Drift Highlights",
+    "desc": "Aksi drifting mobil paling keren tahun ini!",
+    "url": "https://cdn.mysite.com/videos/drift2.mp4",
+    "category": "cars"
+  },
+  {
+    "id": 3,
+    "title": "Street Dance Battle 2025",
+    "desc": "Pertarungan dance jalanan paling panas di 2025!",
+    "url": "https://cdn.mysite.com/videos/dance3.mp4",
+    "category": "dance"
+  }
+]
