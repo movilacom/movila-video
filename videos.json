@@ -1,23 +1,32 @@
 [
   {
-    "id": 1,
-    "title": "Funny Cat Compilation",
-    "desc": "Kumpulan momen lucu kucing yang bikin ngakak!",
-    "url": "https://cdn.mysite.com/videos/cat1.mp4",
-    "category": "funny"
+    "title": "Face sayin ‘ouch’ but my vibe still chillin",
+    "src": "https://cdn.videy.co/57xB8HSm1.mp4",
+    "category": "chill",
+    "desc": "Chill themed short video — part of the MOVILA collection."
   },
   {
-    "id": 2,
-    "title": "Epic Car Drift Highlights",
-    "desc": "Aksi drifting mobil paling keren tahun ini!",
-    "url": "https://cdn.mysite.com/videos/drift2.mp4",
-    "category": "cars"
+    "title": "Here’s an interesting way to do that man’s retwist",
+    "src": "https://cdn.videy.co/jts2sXOB1.mp4",
+    "category": "style",
+    "desc": "Style themed short video — part of the MOVILA collection."
   },
   {
-    "id": 3,
-    "title": "Street Dance Battle 2025",
-    "desc": "Pertarungan dance jalanan paling panas di 2025!",
-    "url": "https://cdn.mysite.com/videos/dance3.mp4",
-    "category": "dance"
+    "title": "pulled up to the parking lot, not for long though",
+    "src": "https://cdn.videy.co/BMqalg3T1.mp4",
+    "category": "random",
+    "desc": "Random themed short video — part of the MOVILA collection."
+  },
+  {
+    "title": "I play dumb but ik & see everything",
+    "src": "https://cdn.videy.co/E7MMBMj11.mp4",
+    "category": "fun",
+    "desc": "Fun themed short video — part of the MOVILA collection."
+  },
+  {
+    "title": "He accompanies me playing games so that I don't get lonely.",
+    "src": "https://cdn.videy.co/iYZ90hUS1.mp4",
+    "category": "gaming",
+    "desc": "Gaming themed short video — part of the MOVILA collection."
   }
 ]
