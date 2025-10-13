@@ -1,31 +1,46 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MOVILA Video Player</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Loading… | MOVILA</title>
+  <meta name="description" content="MOVILA Video player" />
+  <meta property="og:type" content="video.other" />
+  <link rel="icon" href="assets/favicon.png" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<div id="loader">
-  <div class="loader-content">
-    <img src="assets/logo.svg" alt="MOVILA Logo">
-    <p class="loader-text">MOVILA</p>
+  <!-- Loader -->
+  <div id="loader">
+    <div class="loader-content">
+      <img src="assets/logo.svg" alt="MOVILA" />
+      <p class="loader-text">MOVILA</p>
+    </div>
   </div>
-</div>
-<button id="themeToggle" title="Switch Theme">🌙</button>
-  <header>
-    <a href="index.html" class="back">← Back</a>
-    <h1>MOVILA Video</h1>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html">← MOVILA</a>
+      <button id="themeToggle" title="Switch theme">🌙</button>
+    </div>
   </header>
 
   <main class="video-page">
-    <div id="main-video" class="main-video"></div>
+    <section class="player-section">
+      <video id="main-video" controls playsinline></video>
+      <div id="video-info" class="video-info"></div>
+    </section>
 
-    <h2>Recommended Videos</h2>
-    <div id="recommended" class="video-grid"></div>
+    <section class="recommended-section">
+      <h2>Recommended Videos</h2>
+      <div id="recommended-list" class="recommended-grid"></div>
+    </section>
   </main>
 
-  <script src="main.js"></script>
+  <footer class="site-footer">
+    <div>© <span id="year2"></span> MOVILA — Video Edition</div>
+  </footer>
+
+  <script src="video.js" defer></script>
 </body>
 </html>
