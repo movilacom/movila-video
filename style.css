@@ -38,13 +38,6 @@ a{color:inherit;text-decoration:none}
 .video-card.small video{width:40%;height:88px;border-radius:8px}
 .video-card.small .video-info{width:60%}
 
-/* loader */
-#loader{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;background:var(--bg);z-index:9999;transition:opacity 600ms}
-#loader.hidden{opacity:0;pointer-events:none}
-.loader-content img{width:72px;animation:bounce 1.6s infinite}
-.loader-text{margin-top:12px;color:var(--gold);font-weight:700;letter-spacing:2px}
-@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-
 /* player */
 .video-page{max-width:980px;margin:22px auto;padding:0 16px}
 .player-section{position:relative}
