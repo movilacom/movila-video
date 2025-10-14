@@ -1,44 +1,33 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MOVILA Video — Trending Shorts</title>
-  <meta name="description" content="Watch the latest trending short videos on MOVILA Video. Smooth, elegant, and fast." />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MOVILA Video — Viral & Curated Shorts</title>
+  <meta name="description" content="Watch curated viral and movie-related short videos on MOVILA Video. Enjoy elegant playback with dark-light dual mode." />
   <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg" />
 </head>
 <body>
-  <!-- Loader -->
   <div id="loader" class="loader">
-    <div class="loader-content">
-      <img src="assets/logo.svg" alt="MOVILA" />
-      <div class="loader-text">MOVILA</div>
-    </div>
+    <img src="assets/logo.svg" alt="MOVILA" />
+    <p>Loading MOVILA Video...</p>
   </div>
 
-  <!-- Header -->
   <header class="site-header">
     <div class="header-inner">
-      <a href="index.html" class="brand">
-        <img src="assets/icon.svg" alt="MOVILA" /> MOVILA
+      <a href="index.html" class="logo">
+        <img src="assets/logo.svg" alt="MOVILA" />
+        <span>MOVILA Video</span>
       </a>
-      <button id="themeToggle" title="Switch theme">🌙</button>
+      <div class="actions">
+        <button id="themeToggle" title="Switch theme">🌗</button>
+      </div>
     </div>
   </header>
 
-  <!-- Main Content -->
-  <main>
-    <section class="hero">
-      <h1>Trending Shorts 🎬</h1>
-      <p>Discover the latest viral clips curated by MOVILA Video.</p>
-    </section>
+  <main id="video-grid" class="video-grid"></main>
 
-    <section id="video-grid" class="video-grid">
-      <!-- Videos loaded dynamically from videos.json -->
-    </section>
-  </main>
-
-  <!-- Footer -->
   <footer class="site-footer">
     <p>© <span id="year"></span> MOVILA Video — All rights reserved.</p>
   </footer>
