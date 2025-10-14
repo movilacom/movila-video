@@ -1,22 +1,102 @@
 [
-  {"id":0,"title":"Face sayin ‘ouch’ but my vibe still chillin","src":"https://cdn.videy.co/57xB8HSm1.mp4","desc":"Chill short clip","category":"random"},
-  {"id":1,"title":"Here’s an interesting way to do that man’s retwist","src":"https://cdn.videy.co/jts2sXOB1.mp4","desc":"Style short clip","category":"style"},
-  {"id":2,"title":"pulled up to the parking lot, not for long though","src":"https://cdn.videy.co/BMqalg3T1.mp4","desc":"Casual clip","category":"random"},
-  {"id":3,"title":"I play dumb but ik & see everything","src":"https://cdn.videy.co/E7MMBMj11.mp4","desc":"Fun short clip","category":"fun"},
-  {"id":4,"title":"Them know they got some good","src":"https://cdn.videy.co/9TUUnva81.mp4","desc":"Viral moment","category":"random"},
-  {"id":5,"title":"Bruh, if the floor could talk… I’d be done fr","src":"https://cdn.videy.co/boBAreCL1.mp4","desc":"Funny clip","category":"fun"},
-  {"id":6,"title":"Come here baby I’ve missed you","src":"https://cdn.videy.co/vbS3XjLH1.mp4","desc":"Couple moment","category":"couple"},
-  {"id":7,"title":"need a partner now.","src":"https://cdn.videy.co/7DfjfSJx1.mp4","desc":"Short clip","category":"random"},
-  {"id":8,"title":"what happens after this","src":"https://cdn.videy.co/Xneumqi91.mp4","desc":"Cliff moment","category":"random"},
-  {"id":9,"title":"waiting in line","src":"https://cdn.videy.co/rqkqmzgp1.mp4","desc":"Short everyday clip","category":"random"},
-  {"id":10,"title":"He accompanies me playing games so that I don't get lonely.","src":"https://cdn.videy.co/iYZ90hUS1.mp4","desc":"Cozy gaming moment","category":"couple"},
-  {"id":11,"title":"different but the same","src":"https://cdn.videy.co/9NBwCs5n1.mp4","desc":"Short vibe","category":"random"},
-  {"id":12,"title":"My type","src":"https://cdn.videy.co/5LxY87x91.mp4","desc":"Style clip","category":"style"},
-  {"id":13,"title":"This fit doin all the talkin","src":"https://cdn.videy.co/6nGcg8Sh1.mp4","desc":"Outfit flex","category":"style"},
-  {"id":14,"title":"Met her that same night. Yes I","src":"https://cdn.videy.co/WznTdrfv1.mp4","desc":"Night out clip","category":"random"},
-  {"id":15,"title":"She is so beautiful and messy","src":"https://cdn.videy.co/q7S5QeiP1.mp4","desc":"Cute moment","category":"couple"},
-  {"id":16,"title":"That's some heavy beating","src":"https://cdn.videy.co/nWkCDR0h1.mp4","desc":"Intense beat clip","category":"music"},
-  {"id":17,"title":"Wasn’t planning to turn heads… but here we are","src":"https://cdn.videy.co/qvj3bY191.mp4","desc":"Surprise moment","category":"random"},
-  {"id":18,"title":"Tattooed and unbothered","src":"https://cdn.videy.co/rr0pLshi1.mp4","desc":"Style moment","category":"style"},
-  {"id":19,"title":"got zero work for the day. just a few","src":"https://cdn.videy.co/0MDTcE1Z1.mp4","desc":"Chill day","category":"random"}
+  {
+    "title": "Face sayin ‘ouch’ but my vibe still chillin",
+    "description": "Mood tetap santai meski ekspresi bilang ‘ouch’.",
+    "url": "https://cdn.videy.co/57xB8HSm1.mp4"
+  },
+  {
+    "title": "Here’s an interesting way to do that man’s retwist",
+    "description": "Cara unik buat retwist rambut si abang.",
+    "url": "https://cdn.videy.co/jts2sXOB1.mp4"
+  },
+  {
+    "title": "Pulled up to the parking lot, not for long though",
+    "description": "Cuma mampir sebentar di parkiran, tapi tetap keren.",
+    "url": "https://cdn.videy.co/BMqalg3T1.mp4"
+  },
+  {
+    "title": "I play dumb but ik & see everything",
+    "description": "Kadang pura-pura gak tau, padahal liat semuanya.",
+    "url": "https://cdn.videy.co/E7MMBMj11.mp4"
+  },
+  {
+    "title": "Them know they got some good",
+    "description": "Yang tahu, tahu aja.",
+    "url": "https://cdn.videy.co/9TUUnva81.mp4"
+  },
+  {
+    "title": "Bruh, if the floor could talk… I’d be done fr",
+    "description": "Kalau lantai bisa ngomong, tamat riwayat bro.",
+    "url": "https://cdn.videy.co/boBAreCL1.mp4"
+  },
+  {
+    "title": "Come here baby I’ve missed you",
+    "description": "Momen kangen yang bikin senyum sendiri.",
+    "url": "https://cdn.videy.co/vbS3XjLH1.mp4"
+  },
+  {
+    "title": "Need a partner now",
+    "description": "Saat semua terasa hampa tanpa partner.",
+    "url": "https://cdn.videy.co/7DfjfSJx1.mp4"
+  },
+  {
+    "title": "What happens after this",
+    "description": "Kamu pasti penasaran lanjutannya.",
+    "url": "https://cdn.videy.co/Xneumqi91.mp4"
+  },
+  {
+    "title": "Waiting in line",
+    "description": "Sabar adalah kunci bahkan saat ngantri.",
+    "url": "https://cdn.videy.co/rqkqmzgp1.mp4"
+  },
+  {
+    "title": "He accompanies me playing games so that I don't get lonely",
+    "description": "Teman sejati selalu ada bahkan di mode game.",
+    "url": "https://cdn.videy.co/iYZ90hUS1.mp4"
+  },
+  {
+    "title": "Different but the same",
+    "description": "Kita beda tapi serasi, itu yang bikin menarik.",
+    "url": "https://cdn.videy.co/9NBwCs5n1.mp4"
+  },
+  {
+    "title": "My type",
+    "description": "Semua orang punya tipe, ini punyaku.",
+    "url": "https://cdn.videy.co/5LxY87x91.mp4"
+  },
+  {
+    "title": "This fit doin all the talkin",
+    "description": "Outfit-nya udah ngomong banyak tanpa kata.",
+    "url": "https://cdn.videy.co/6nGcg8Sh1.mp4"
+  },
+  {
+    "title": "Met her that same night. Yes I",
+    "description": "Pertemuan singkat yang langsung nyangkut di hati.",
+    "url": "https://cdn.videy.co/WznTdrfv1.mp4"
+  },
+  {
+    "title": "She is so beautiful and messy",
+    "description": "Cantik tapi berantakan, dan itu justru menarik.",
+    "url": "https://cdn.videy.co/q7S5QeiP1.mp4"
+  },
+  {
+    "title": "Wasn’t planning to turn heads… but here we are",
+    "description": "Gak niat nyuri perhatian, tapi semua mata ngeliat.",
+    "url": "https://cdn.videy.co/qvj3bY191.mp4"
+  },
+  {
+    "title": "Tattooed and unbothered",
+    "description": "Tattoo bukan cuma seni, tapi identitas.",
+    "url": "https://cdn.videy.co/rr0pLshi1.mp4"
+  },
+  {
+    "title": "Got zero work for the day. Just a few",
+    "description": "Hari tanpa kerjaan, tapi tetap produktif versi chill.",
+    "url": "https://cdn.videy.co/0MDTcE1Z1.mp4"
+  },
+  {
+    "title": "He's beautiful but does it herself",
+    "description": "Mandiri, keren, dan tetep mempesona.",
+    "url": "https://cdn.videy.co/emmhiwW11.mp4"
+  }
 ]
