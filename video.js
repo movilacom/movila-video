@@ -1,75 +1,107 @@
-document.addEventListener("DOMContentLoaded", async () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const vidParam = urlParams.get("vid");
-  if (vidParam === null) {
-    console.warn("No vid parameter in URL");
-    return;
-  }
-  const vid = parseInt(vidParam, 10);
-  if (isNaN(vid)) {
-    console.warn("vid parameter not a number:", vidParam);
-    return;
-  }
+// video.js - player page logic with fallback
+document.addEventListener("DOMContentLoaded", () => {
+  const params = new URLSearchParams(window.location.search);
+  const vidParam = params.get("vid");
+  const player = document.getElementById("main-video");
+  const source = document.getElementById("main-source");
+  const info = document.getElementById("video-info");
+  const recList = document.getElementById("recommended-list");
+  const errorBox = document.getElementById("video-error");
+  if (document.getElementById("year2")) document.getElementById("year2").textContent = new Date().getFullYear();
 
-  try {
-    const res = await fetch("videos.json");
-    if (!res.ok) throw new Error("videos.json not found");
-    const videos = await res.json();
+  // load videos.json
+  fetch("videos.json").then(r => {
+    if (!r.ok) throw new Error("videos.json not found");
+    return r.json();
+  }).then(data => {
+    const all = Array.isArray(data) ? data : [];
+    const id = isNaN(Number(vidParam)) ? vidParam : Number(vidParam);
+    const video = all.find(v => String(v.id) === String(id) || all.indexOf(v) === id);
 
-    // Basic sanity check
-    if (!Array.isArray(videos) || videos.length === 0) {
-      console.error("videos.json is empty or invalid");
+    if (!video) {
+      if (info) info.innerHTML = `<p style="color:#bbb">Video not found.</p>`;
       return;
     }
 
-    const v = videos.find((x) => x.id === vid);
-    if (!v) {
-      console.error("Video with id", vid, "not found in JSON");
-      document.getElementById("video-info").innerHTML = "<p>Video not found.</p>";
-      return;
-    }
+    info.innerHTML = `<h3>${escapeHtml(video.title)}</h3><p>${escapeHtml(video.desc||"")}</p>`;
+    // try to load normally, fallback to blob if metadata fail or error
+    tryLoadVideo(video.src);
 
-    const player = document.getElementById("main-video");
-    const infoDiv = document.getElementById("video-info");
-    const recList = document.getElementById("recommended-list");
+    // recommended
+    const recommended = all.filter(v => v.id !== video.id).sort(()=>0.5 - Math.random()).slice(0,6);
+    recList.innerHTML = "";
+    recommended.forEach(v => {
+      const div = document.createElement("div");
+      div.className = "video-card small";
+      div.innerHTML = `<video src="${v.src}" muted preload="metadata" playsinline crossorigin="anonymous"></video><div class="video-info"><h4>${escapeHtml(v.title)}</h4><p>${escapeHtml((v.desc||"").slice(0,70))}</p></div>`;
+      div.addEventListener("click", ()=> switchToVideo(v, all));
+      recList.appendChild(div);
+    });
+  }).catch(err => {
+    console.error(err);
+    if (info) info.innerHTML = `<p style="color:#bbb">Failed to load videos.json — check path.</p>`;
+  });
 
-    player.src = v.src;
+  async function tryLoadVideo(url) {
+    errorBox.style.display = "none";
+    errorBox.textContent = "";
+    // clear any previous blob url
+    try { if (player && player.src && player.src.startsWith("blob:")) URL.revokeObjectURL(player.src); } catch(e){}
+
+    // set normal source first
+    source.src = url;
     player.load();
-    player.play().catch(() => {});
+    player.play().catch(()=>{ /* autoplay may be blocked */ });
 
-    infoDiv.innerHTML = `<h3>${v.title}</h3><p>${v.desc || ""}</p>`;
-
-    // Recommended
-    const others = videos.filter((x) => x.id !== vid);
-    const recommended = others.sort(() => 0.5 - Math.random()).slice(0, 5);
-
-    recommended.forEach((rv) => {
-      const card = document.createElement("a");
-      card.className = "video-card small";
-      card.href = `video.html?vid=${rv.id}`;
-
-      const thumb = document.createElement("video");
-      thumb.src = rv.src;
-      thumb.muted = true;
-      thumb.playsInline = true;
-      thumb.preload = "metadata";
-      thumb.addEventListener("loadeddata", () => {
-        try { thumb.currentTime = 0.5; thumb.pause(); } catch(e) {}
-      });
-
-      const infoBlock = document.createElement("div");
-      infoBlock.className = "video-info";
-      infoBlock.innerHTML = `<h4>${rv.title}</h4><p>${rv.desc || ""}</p>`;
-
-      card.appendChild(thumb);
-      card.appendChild(infoBlock);
-
-      recList.appendChild(card);
+    // wait for metadata or error
+    const metaLoaded = await new Promise(resolve => {
+      let resolved = false;
+      const onMeta = () => { if (!resolved){ resolved = true; cleanup(); resolve(true); } };
+      const onErr = () => { if (!resolved){ resolved = true; cleanup(); resolve(false); } };
+      function cleanup(){ player.removeEventListener("loadedmetadata", onMeta); player.removeEventListener("error", onErr); }
+      player.addEventListener("loadedmetadata", onMeta);
+      player.addEventListener("error", onErr);
+      // timeout
+      setTimeout(()=> { if (!resolved) { resolved = true; cleanup(); resolve(false); } }, 5000);
     });
 
-  } catch (err) {
-    console.error("Error in video.js:", err);
-    const infoDiv = document.getElementById("video-info");
-    if (infoDiv) infoDiv.innerHTML = `<p style="color: #f00;">Error loading video.</p>`;
+    if (metaLoaded) {
+      console.log("metadata loaded with native source");
+      return true;
+    }
+
+    // fallback: fetch as blob (full download)
+    try {
+      console.warn("Native load failed. Trying fetch-as-blob fallback for:", url);
+      errorBox.style.display = "block";
+      errorBox.textContent = "Loading video via fallback (may take a while)...";
+
+      const resp = await fetch(url, { method: "GET", mode: "cors" });
+      if (!resp.ok) throw new Error("Fetch failed: " + resp.status);
+      const blob = await resp.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      source.src = blobUrl;
+      player.load();
+      await player.play().catch(()=>{ /* if autoplay blocked */ });
+      errorBox.style.display = "none";
+      console.log("Fallback blob playing.");
+      return true;
+    } catch (err) {
+      console.error("Fallback fetch failed:", err);
+      errorBox.style.display = "block";
+      errorBox.textContent = "Unable to load video from source (CDN may block requests). See console for details.";
+      return false;
+    }
   }
+
+  function switchToVideo(next, all) {
+    // smooth swap without reload
+    tryLoadVideo(next.src);
+    const infoEl = document.getElementById("video-info");
+    if (infoEl) infoEl.innerHTML = `<h3>${escapeHtml(next.title)}</h3><p>${escapeHtml(next.desc||"")}</p>`;
+    history.replaceState(null, "", `video.html?vid=${encodeURIComponent(next.id)}`);
+    // rebuild recommended quickly (optional)
+  }
+
+  function escapeHtml(s=""){ return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
 });
