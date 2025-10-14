@@ -3,46 +3,35 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MOVILA Video — Shorts & Viral</title>
-  <meta name="description" content="MOVILA Video — curated short videos, auto-generated from CDN. Explore trending shorts, categories, and daily picks." />
-  <meta property="og:title" content="MOVILA Video — Shorts & Viral" />
-  <meta property="og:description" content="MOVILA Video — curated short videos, auto-generated from CDN." />
-  <meta property="og:type" content="website" />
-  <link rel="icon" href="assets/favicon.png" />
+  <title>MOVILA Video</title>
+  <meta name="description" content="MOVILA — trending short videos, curated from CDN." />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- Loader -->
-  <div id="loader">
+  <div id="loader" class="loader">
     <div class="loader-content">
       <img src="assets/logo.svg" alt="MOVILA" />
-      <p class="loader-text">MOVILA</p>
+      <div class="loader-text">MOVILA</div>
     </div>
   </div>
 
   <header class="site-header">
     <div class="header-inner">
       <a class="brand" href="index.html">MOVILA</a>
-
       <div class="controls">
         <div class="filter-bar">
-          <input type="text" id="search" placeholder="Search videos..." aria-label="Search videos" />
-          <select id="category" aria-label="Filter category">
-            <option value="all">All Categories</option>
-          </select>
+          <input id="search" placeholder="Search videos..." aria-label="Search videos" />
+          <select id="category" aria-label="Filter category"><option value="all">All</option></select>
         </div>
         <button id="themeToggle" title="Switch theme">🌙</button>
       </div>
     </div>
   </header>
 
-  <main>
-    <!-- Daily Short (injected by JS) -->
-    <main id="main-content">
-      <section id="video-feed" class="video-grid-wrap">
-        <div id="video-list" class="video-grid"></div>
-      </section>
-    </main>
+  <main id="main-content">
+    <section id="video-feed" class="video-grid-wrap">
+      <div id="video-list" class="video-grid"></div>
+    </section>
   </main>
 
   <footer class="site-footer">
