@@ -3,15 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MOVILA — Watch</title>
-  <meta name="description" content="MOVILA Video player — watch curated short videos." />
+  <title>Loading… | MOVILA</title>
+  <meta name="description" content="MOVILA Video player" />
+  <meta property="og:type" content="video.other" />
+  <link rel="icon" href="assets/favicon.png" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="loader" class="loader">
+  <!-- Loader -->
+  <div id="loader">
     <div class="loader-content">
       <img src="assets/logo.svg" alt="MOVILA" />
-      <div class="loader-text">MOVILA</div>
+      <p class="loader-text">MOVILA</p>
     </div>
   </div>
 
@@ -24,17 +27,12 @@
 
   <main class="video-page">
     <section class="player-section">
-      <video id="main-video" controls playsinline crossorigin="anonymous">
-        <source id="main-source" src="" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
-
+      <video id="main-video" controls playsinline></video>
       <div id="video-info" class="video-info"></div>
-      <div id="video-error" class="video-error" style="display:none;color:#ffb3b3;margin-top:12px;"></div>
     </section>
 
     <section class="recommended-section">
-      <h2>Recommended</h2>
+      <h2>Recommended Videos</h2>
       <div id="recommended-list" class="recommended-grid"></div>
     </section>
   </main>
