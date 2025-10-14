@@ -1,13 +1,14 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MOVILA Video</title>
-  <meta name="description" content="MOVILA — trending short videos, curated from CDN." />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MOVILA Video — Trending Shorts</title>
+  <meta name="description" content="Watch the latest trending short videos on MOVILA Video. Smooth, elegant, and fast." />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- Loader -->
   <div id="loader" class="loader">
     <div class="loader-content">
       <img src="assets/logo.svg" alt="MOVILA" />
@@ -15,27 +16,31 @@
     </div>
   </div>
 
+  <!-- Header -->
   <header class="site-header">
     <div class="header-inner">
-      <a class="brand" href="index.html">MOVILA</a>
-      <div class="controls">
-        <div class="filter-bar">
-          <input id="search" placeholder="Search videos..." aria-label="Search videos" />
-          <select id="category" aria-label="Filter category"><option value="all">All</option></select>
-        </div>
-        <button id="themeToggle" title="Switch theme">🌙</button>
-      </div>
+      <a href="index.html" class="brand">
+        <img src="assets/icon.svg" alt="MOVILA" /> MOVILA
+      </a>
+      <button id="themeToggle" title="Switch theme">🌙</button>
     </div>
   </header>
 
-  <main id="main-content">
-    <section id="video-feed" class="video-grid-wrap">
-      <div id="video-list" class="video-grid"></div>
+  <!-- Main Content -->
+  <main>
+    <section class="hero">
+      <h1>Trending Shorts 🎬</h1>
+      <p>Discover the latest viral clips curated by MOVILA Video.</p>
+    </section>
+
+    <section id="video-grid" class="video-grid">
+      <!-- Videos loaded dynamically from videos.json -->
     </section>
   </main>
 
+  <!-- Footer -->
   <footer class="site-footer">
-    <div>© <span id="year"></span> MOVILA — Video Edition</div>
+    <p>© <span id="year"></span> MOVILA Video — All rights reserved.</p>
   </footer>
 
   <script src="main.js" defer></script>
