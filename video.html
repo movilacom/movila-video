@@ -24,12 +24,15 @@
 
   <main class="video-page">
     <section class="player-section">
-      <!-- Use <source> for better compatibility -->
       <video id="main-video" controls playsinline crossorigin="anonymous">
         <source id="main-source" src="" type="video/mp4">
         Your browser does not support the video tag.
       </video>
+
       <div id="video-info" class="video-info"></div>
+
+      <!-- error / helper area -->
+      <div id="video-error" style="color:#ffb3b3;margin-top:12px;display:none;"></div>
     </section>
 
     <section class="recommended-section">
