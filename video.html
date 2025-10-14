@@ -4,33 +4,32 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>MOVILA — Watch</title>
-  <meta name="description" content="MOVILA Video player — watch curated short videos." />
+  <meta name="description" content="Watch viral and movie short videos on MOVILA Video. Elegant dark & light mode player with recommendations." />
   <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg" />
 </head>
 <body>
   <div id="loader" class="loader">
-    <div class="loader-content">
-      <img src="assets/logo.svg" alt="MOVILA" />
-      <div class="loader-text">MOVILA</div>
-    </div>
+    <img src="assets/logo.svg" alt="MOVILA" />
+    <div class="loader-text">Loading video...</div>
   </div>
 
   <header class="site-header">
     <div class="header-inner">
-      <a class="brand" href="index.html">← MOVILA</a>
-      <button id="themeToggle" title="Switch theme">🌙</button>
+      <a href="index.html" class="brand">← MOVILA</a>
+      <button id="themeToggle" title="Switch theme">🌗</button>
     </div>
   </header>
 
   <main class="video-page">
     <section class="player-section">
-      <video id="main-video" controls playsinline crossorigin="anonymous">
-        <source id="main-source" src="" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
-
+      <div class="video-wrapper">
+        <video id="main-video" controls playsinline crossorigin="anonymous" poster="">
+          <source id="main-source" src="" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
       <div id="video-info" class="video-info"></div>
-      <div id="video-error" class="video-error" style="display:none;color:#ffb3b3;margin-top:12px;"></div>
     </section>
 
     <section class="recommended-section">
@@ -40,7 +39,7 @@
   </main>
 
   <footer class="site-footer">
-    <div>© <span id="year2"></span> MOVILA — Video Edition</div>
+    <p>© <span id="year2"></span> MOVILA Video — All rights reserved.</p>
   </footer>
 
   <script src="video.js" defer></script>
