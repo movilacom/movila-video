@@ -3,33 +3,39 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MOVILA Video — Viral & Curated Shorts</title>
-  <meta name="description" content="Watch curated viral and movie-related short videos on MOVILA Video. Enjoy elegant playback with dark-light dual mode." />
+  <title>MOVILA Video</title>
+  <meta name="description" content="MOVILA — trending short videos, curated from CDN." />
   <link rel="stylesheet" href="style.css" />
-  <link rel="icon" type="image/svg+xml" href="assets/icon.svg" />
 </head>
 <body>
   <div id="loader" class="loader">
-    <img src="assets/logo.svg" alt="MOVILA" />
-    <p>Loading MOVILA Video...</p>
+    <div class="loader-content">
+      <img src="assets/logo.svg" alt="MOVILA" />
+      <div class="loader-text">MOVILA</div>
+    </div>
   </div>
 
   <header class="site-header">
     <div class="header-inner">
-      <a href="index.html" class="logo">
-        <img src="assets/logo.svg" alt="MOVILA" />
-        <span>MOVILA Video</span>
-      </a>
-      <div class="actions">
-        <button id="themeToggle" title="Switch theme">🌗</button>
+      <a class="brand" href="index.html">MOVILA</a>
+      <div class="controls">
+        <div class="filter-bar">
+          <input id="search" placeholder="Search videos..." aria-label="Search videos" />
+          <select id="category" aria-label="Filter category"><option value="all">All</option></select>
+        </div>
+        <button id="themeToggle" title="Switch theme">🌙</button>
       </div>
     </div>
   </header>
 
-  <main id="video-grid" class="video-grid"></main>
+  <main id="main-content">
+    <section id="video-feed" class="video-grid-wrap">
+      <div id="video-list" class="video-grid"></div>
+    </section>
+  </main>
 
   <footer class="site-footer">
-    <p>© <span id="year"></span> MOVILA Video — All rights reserved.</p>
+    <div>© <span id="year"></span> MOVILA — Video Edition</div>
   </footer>
 
   <script src="main.js" defer></script>
